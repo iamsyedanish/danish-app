@@ -11,7 +11,7 @@ pipeline {
             steps {
                 script {
                     dir('backend') {
-                        docker.build("user-service-backend:latest", ".")
+                        docker.build("backend:latest", ".")
                     }
                 }
             }
@@ -19,7 +19,17 @@ pipeline {
         stage('Run Backend Docker Container') {
             steps {
                 script {
-                    docker.image("user-service-backend:latest").run("-d -p 5000:5000")
+                    docker.image("backend:latest").run("-d -p 5000:5000")
+                }
+            }
+        }
+
+        stage('Build Frontend Docker Image') {
+            steps {
+                script {
+                    dir('frontend') { 
+                        docker.build("frontend-app", ".")
+                    }
                 }
             }
         }
@@ -27,7 +37,7 @@ pipeline {
         stage('Run Frontend Docker Container') {
             steps {
                 script {
-                    docker.image("customer-portal-frontend:latest").run("-d -p 3000:3000")
+                    docker.image("frontend:latest").run("-d -p 3000:3000")
                 }
             }
         }
